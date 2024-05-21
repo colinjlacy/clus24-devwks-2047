@@ -1,0 +1,16 @@
+FROM python:latest
+
+WORKDIR /
+
+COPY . .
+
+RUN pip3 install -r requirements.txt --upgrade pip
+
+ENV KAFKA_BOOTSTRAP_SERVERS='kafka1:9092,kafka2:9092'
+ENV CONSUMER_TOPICS='new-user,notified'
+ENV CONSUMER_GROUP='provisioning-group'
+ENV PRODUCER_TOPIC='authorize'
+ENV ERROR_TOPIC='dlq'
+ENV PORT=8081
+
+CMD python3 /consumer-producer.py
