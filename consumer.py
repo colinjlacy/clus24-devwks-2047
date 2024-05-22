@@ -19,7 +19,7 @@ KAFKA_TOPIC = os.environ.get('KAFKA_TOPIC')
 KAFKA_BOOTSTRAP_SERVERS = (
     os.environ.get('KAFKA_BOOTSTRAP_SERVERS').split(",")
 )
-KAFKA_GROUP = os.environ.get('KAFKA_GROUP')
+CONSUMER_GROUP = os.environ.get('CONSUMER_GROUP')
 
 
 # GLOBAL VARIABLES
@@ -41,14 +41,14 @@ log = logging.getLogger(__name__)
 ##############################
 async def initialize():
     global consumer
-    log.debug(f'Initializing KafkaConsumer for topic {KAFKA_TOPIC}, group_id {KAFKA_GROUP}'
+    log.debug(f'Initializing KafkaConsumer for topic {KAFKA_TOPIC}, group_id {CONSUMER_GROUP}'
               f' and using bootstrap servers {KAFKA_BOOTSTRAP_SERVERS}')
 
     consumer = AIOKafkaConsumer(
         KAFKA_TOPIC,
         bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
         value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-        group_id=KAFKA_GROUP
+        group_id=CONSUMER_GROUP
     )
     await consumer.start()
 

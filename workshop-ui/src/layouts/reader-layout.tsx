@@ -1,12 +1,9 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Toolbar from '@mui/material/Toolbar';
-import { Remarkable } from 'remarkable';
-import hljs from 'highlight.js';
+import {Remarkable} from "remarkable";
+import hljs from "highlight.js";
+import * as React from "react";
 import {useEffect, useState} from "react";
 import GLightbox from "glightbox";
-
+import Box from "@mui/material/Box";
 
 const md = new Remarkable('full', {
         html: true,
@@ -14,17 +11,19 @@ const md = new Remarkable('full', {
             if (lang && hljs.getLanguage(lang)) {
                 try {
                     return hljs.highlight(lang, str).value;
-                } catch (__) {}
+                } catch (__) {
+                }
             }
             try {
                 return hljs.highlightAuto(str).value;
-            } catch (__) {}
+            } catch (__) {
+            }
             return ''; // use external default escaping
         }
     }
 );
 
-export default function SectionLayout(props: {component: React.ReactElement, mdPath: string}) {
+export default function ReaderLayout(props: { mdPath: string }) {
 
     const [markdown, setMarkdown] = useState("");
 
@@ -35,8 +34,8 @@ export default function SectionLayout(props: {component: React.ReactElement, mdP
             .then((res) => res.text())
             .then((text) => {
                 setMarkdown(md.render(text))
-                });
-        }, []);
+            });
+    }, []);
 
     useEffect(() => {
         const pres = document.getElementsByTagName("pre")
@@ -47,9 +46,9 @@ export default function SectionLayout(props: {component: React.ReactElement, mdP
             }
             const handler = function (e: MouseEvent) {
                 const t = p.innerText
-                navigator.clipboard.writeText(t).then(function() {
+                navigator.clipboard.writeText(t).then(function () {
                     console.log('Async: Copying to clipboard was successful!');
-                }, function(err) {
+                }, function (err) {
                     console.error('Async: Could not copy text: ', err);
                 });
             }
@@ -72,30 +71,12 @@ export default function SectionLayout(props: {component: React.ReactElement, mdP
     }, [markdown]);
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <Box component="main" sx={{ width: "57%", p: 3 }}>
-
-                {/*INJECTING THE CHILD COMPONENT*/}
-                {props.component}
-                {/*******************************/}
+        <Box sx={{display: 'flex', justifyContent: "center"}}>
+            <Box component="main" sx={{width: "57%", p: 3, backgroundColor: "#fff", color: "#333"}}
+                 id={"markdown-renderer"}>
+                <div dangerouslySetInnerHTML={{__html: markdown}}>
+                </div>
             </Box>
-            <Drawer
-                PaperProps={{
-                    sx: {
-                        width: "43%",
-                        flexShrink: 0,
-                        [`& .MuiDrawer-paper`]: { boxSizing: 'border-box' },
-                    },
-                }}
-                variant="permanent"
-                anchor="right"
-            >
-                <Toolbar />
-                <Box sx={{ overflow: 'auto', p: 2 }} id={"markdown-renderer"}>
-                    <div dangerouslySetInnerHTML={{ __html: markdown}}>
-                    </div>
-                </Box>
-            </Drawer>
         </Box>
-    );
+    )
 }

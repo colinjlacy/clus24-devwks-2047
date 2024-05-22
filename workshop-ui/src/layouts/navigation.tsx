@@ -7,7 +7,6 @@ import SectionLayout from "./section-layout";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Section1 from "../components/section1";
 import section1 from '../lab-guide/section1.md'
 import Section2 from "../components/section2";
 import section2 from '../lab-guide/section2.md'
@@ -17,6 +16,7 @@ import Section4 from "../components/section4";
 import section4 from '../lab-guide/section4.md'
 import Section5 from "../components/section5";
 import section5 from '../lab-guide/section5.md'
+import ReaderLayout from "./reader-layout";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,7 +74,7 @@ export default function BasicTabs() {
             </AppBar>
 
             <CustomTabPanel value={value} index={0}>
-                <SectionLayout component={Section1({active: value === 0})} mdPath={section1}></SectionLayout>
+                <ReaderLayout mdPath={section1}></ReaderLayout>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <SectionLayout component={Section2({active: value === 1})} mdPath={section2}></SectionLayout>

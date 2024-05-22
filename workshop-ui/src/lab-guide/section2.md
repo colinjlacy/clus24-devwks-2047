@@ -45,7 +45,7 @@ KAFKA_TOPIC = os.environ['KAFKA_TOPIC']
 KAFKA_BOOTSTRAP_SERVERS = (
     os.environ["KAFKA_BOOTSTRAP_SERVERS"].split(",")
 )
-KAFKA_GROUP = os.environ["KAFKA_GROUP"]
+CONSUMER_GROUP = os.environ["CONSUMER_GROUP"]
 ```
 
 When we run this file, we can pass in whatever values we want to ensure that this Consumer connects to the right Kafka cluster. To do that, we'll need to set those values when we run this file:
@@ -54,24 +54,66 @@ When we run this file, we can pass in whatever values we want to ensure that thi
 ```sh
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
-KAFKA_GROUP="first-group" \
+CONSUMER_GROUP="first-group" \
 python consumer.py
 ```
 
 Once that's connected, you should see a log printed to the console saying, *"Starting consumer on topic first-topic, in group first-group"*.
 
-Try clicking the **Send Event** button to the left a few times. Each time you do, the UI will send a POST request to the Producer, which will turn it into an Event that is sent to the `first-topic` topic in Kafka, and ultimately received by the Consumer. The UI, Producer, and Consumer will all each a time at which the event was handled.  
+Try clicking the **Send Event** button to the left a few times. Each time you do, the UI will send a POST request to the Producer, which will turn it into an Event that is sent to the `first-topic` topic in Kafka, and ultimately received by the Consumer. The UI, Producer, and Consumer will all each a time at which the event was handled.
+
+> ### Discussion
+> What do you notice about the timestamps between the different events? Specifically, is there a pattern that you notice about which step takes the longest?
+
+### Compensating for Downtime
+
+Let's experiment with the Consumer a bit.  Try shutting down the Consumer using `Ctrl+C`. Once it's no longer running, click the button to the left a three or four more times to send some events to Kafka.  
+
+Now, restart the Consumer again with the following command (which you can probably just press the up button to recall):
+
+<span class="copy"></span>
+```sh
+KAFKA_TOPIC="first-topic" \
+KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
+CONSUMER_GROUP="first-group" \
+python consumer.py
+```
+
+**What do you notice?**  What benefit does this provide?
+
+> ### Discussion
+> What do you think made it possible for the Consumer to pick up messages that were sent when it was offline?
+> 
+> How does this compare to different system designs like service-to-service REST requests?
+
+## Moving on
+
+Leave the Producer and Consumer running, and click the button below to move on to the next section.
 
 <hr>
 
 ## Additional Information
 
-**Bootstrap Servers:** Even though we only need to connect to one broker to start that initial connection to the full cluster, it's always a good idea to give your Producers and Consumers more than one address to connect to.  If the first broker is down, the next address in the list will be used.
+### Bootstrap Servers
 
-**Kafka Message Serialization:** Kafka will only send raw bytes, so both the Producer and Consumer have to have a common understanding of how to read and process those bytes.  Other message bus solutions, like Kinesis and RabbitMQ, will accept data of any format and serialize it behind the scenes.  There are performance and implementation considerations for both approaches to serialization that are beyond the scope of this workshop.
+Even though we only need to connect to one broker to start that initial connection to the full cluster, it's always a good idea to give your Producers and Consumers more than one address to connect to.  If the first broker is down, the next address in the list will be used.
 
-**Using Environment Variables for Connection Configuration:** We may be using this `consumer.py` file to connect to a local Kafka cluster; but because we're using environment variables to configure the connection, we can use this same file to connect to any Kafka cluster that is available and accessible.  This follows an approach known as **12-Factor**, which you can read more about here: [https://12factor.net/](https://12factor.net/).
+### Kafka Message Serialization
 
-### Troubleshooting the Producer
+Kafka will only send raw bytes, so both the Producer and Consumer have to have a common understanding of how to read and process those bytes.  Other message bus solutions, like Kinesis and RabbitMQ, will accept data of any format and serialize it behind the scenes.  There are performance and implementation considerations for both approaches to serialization that are beyond the scope of this workshop.
+
+### Using Environment Variables
+
+We may be using this `consumer.py` file to connect to a local Kafka cluster; but because we're using environment variables to configure the connection, we can use this same file to connect to any Kafka cluster that is available and accessible.  This follows an approach known as **12-Factor**, which you can read more about here: [https://12factor.net/](https://12factor.net/).
+
+### Asynchronous I/O
+
+The `consumer.py` and `consumer-producer/cp.py` files both use a Kafka library called [aiokafka](https://github.com/aio-libs/aiokafka), which uses [asyncio](https://docs.python.org/3/library/asyncio.html) to consume events from Kafka. The reason this is so important, and the reason we're not using the long-standing [kafka-python](https://kafka-python.readthedocs.io/en/master/) library that is used in `producer.py`, is that topic consumption is a blocking process. That means the consumer function itself blocks anything else from happening (e.g. a RESTful API).      
+
+## Troubleshooting the Producer
 
 If the Producer does not show as connected, check your `KafkaProducer` configuration again, ensuring that it matches what's shown above. Also be sure to check that the RESTful endpoints in the Producer are correctly configured. There should be at least one `GET` endpoint listening at `http://localhost:5000/ping`, which the lab guide uses to determine if the Producer is available.
+
+## Troubleshooting the Consumer
+
+If the services aren't able to join their consumer groups, then it's likely a problem with the Kafka cluster itself - specifically the topics are assigned to brokers IDs that may not match the active broker IDs. This is usually because the Zookeeper container was run against multiple Kafka containers.  The best way to solve this is to kill *and delete* all of the containers related to the Kafka cluster, and then start it all up again using the Docker command listed above.

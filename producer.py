@@ -11,8 +11,12 @@ app = Flask(__name__)
 cors = CORS(app)
 
 producer = KafkaProducer(
-    bootstrap_servers=[],
-    value_serializer=None
+    bootstrap_servers=[
+        '127.0.0.1:9093', 
+        '127.0.0.1:9094'
+    ],
+    value_serializer=lambda m:
+        json.dumps(m).encode('utf-8'),
 )
 
 

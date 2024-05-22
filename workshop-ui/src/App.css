@@ -11,6 +11,15 @@
   color: white;
 }
 
+.MuiTabs-flexContainerVertical {
+  margin-top: 1rem;
+}
+
+.MuiTabs-flexContainerVertical button {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
 /* Markdown Renderer and its Accompanying Functionality*/
 
 img {
@@ -21,6 +30,23 @@ img {
 #markdown-renderer li code {
   color: #ff9800;
   font-weight: bold;
+}
+
+#markdown-renderer pre {
+  overflow-x: scroll;
+}
+
+#markdown-renderer blockquote {
+  background-color: #163754;
+  margin-left: 0;
+  margin-right: 0;
+  padding: .5rem 1rem;
+  color: white;
+}
+
+#markdown-renderer blockquote h3 {
+  color: #7ee1ff;
+  font-size: 1.25em;
 }
 
 .copy-icon {

@@ -93,9 +93,11 @@ async def handle_event(event):
 
     await asyncio.sleep(random.random() * 5)
     received_messages[event.topic].append(event.value)
-    new_msg = {'id': event.value['id'], 'errors': event.value['errors']}
+    new_msg = {'id': event.value['id']}
+    if "errors" in event.value:
+        new_msg['errors'] = event.value['errors']
     if event.topic == "new-user":
-        if event.value["errors"] is not None and event.value["dept"] == "Finance":
+        if "errors" in event.value and event.value["dept"] == "Finance":
             return await producer.send(
                 os.environ.get('ERRORS_TOPIC', 'dlq'),
                 {
@@ -107,7 +109,7 @@ async def handle_event(event):
         else:
             new_msg['device_id'] = int(round(datetime.now().timestamp()))
     elif event.topic == "notify":
-        if event.value["errors"] is not None and should_raise_error():
+        if "errors" in event.value and should_raise_error():
             return await producer.send(
                 os.environ.get('ERRORS_TOPIC', 'dlq'),
                 {
@@ -119,7 +121,7 @@ async def handle_event(event):
         else:
             new_msg['notified'] = True
     elif event.topic == "authorize":
-        if event.value["errors"] is not None and should_raise_error():
+        if "errors" in event.value and should_raise_error():
             return await producer.send(
                 os.environ.get('ERRORS_TOPIC', 'dlq'),
                 {

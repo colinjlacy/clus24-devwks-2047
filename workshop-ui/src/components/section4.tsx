@@ -47,7 +47,7 @@ export default function Section4(props: { active: boolean }) {
             axios.get(`${PRODUCER_URL}/ping`).then(res => {
                 if (res.status === 200) {
                     setProducerActive(true)
-                    console.log("section 3 producer running")
+                    console.log("section 4 producer running")
                 }
             }).catch(() => {
                 setProducerActive(false)
@@ -56,24 +56,17 @@ export default function Section4(props: { active: boolean }) {
         }, POLLING_INTERVAL)
         const sagaInt = setInterval(async () => {
             if (!props.active) return
+            const activeServiceTrackers = [setProvisionerActive, setAuthorizerActive, setNotifierActive]
             const responses = await Promise.allSettled([
                 axios.get(`${PROVISIONER_URL}`), axios.get(`${AUTHORIZER_URL}`), axios.get(`${NOTIFIER_URL}`)
             ]);
             let traces = [...sagaTraces]
             for (let i = 0; i < responses.length; i++) {
                 if (responses[i].status === "rejected") {
-                    switch (i) {
-                        case 0:
-                            setProvisionerActive(false);
-                            break
-                        case 1:
-                            setAuthorizerActive(false);
-                            break
-                        case 2:
-                            setNotifierActive(false)
-                            break
-                    }
+                    activeServiceTrackers[i](false)
                     return
+                } else {
+                    activeServiceTrackers[i](true)
                 }
                 //@ts-ignore
                 const val = responses[i].value
@@ -84,6 +77,7 @@ export default function Section4(props: { active: boolean }) {
                     })
                 })
             }
+
             setSagaTraces(traces)
         }, POLLING_INTERVAL)
         return function () {

@@ -53,6 +53,7 @@ services:
             KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+            KAFKA_CREATE_TOPICS: "first-topic:2:2,fanout-topic:2:2,new-user:2:2,authorize:2:2,notify:2:2,notified:2:2,dlq:2:2"
 
     provisioner:
         build:
@@ -64,9 +65,10 @@ services:
         expose:
             - "8081"
         depends_on:
-            - zookeeper
-            - kafka1
-            - kafka2
+            kafka1:
+                condition: service_healthy
+            kafka2:
+                condition: service_healthy
         environment:
             PORT: 8081
 
@@ -80,9 +82,10 @@ services:
         expose:
             - "8082"
         depends_on:
-            - zookeeper
-            - kafka1
-            - kafka2
+            kafka1:
+                condition: service_healthy
+            kafka2:
+                condition: service_healthy
         environment:
             CONSUMER_TOPICS: authorize
             CONSUMER_GROUP: authorizer-group
@@ -99,9 +102,10 @@ services:
         expose:
             - "8083"
         depends_on:
-            - zookeeper
-            - kafka1
-            - kafka2
+            kafka1:
+                condition: service_healthy
+            kafka2:
+                condition: service_healthy
         environment:
             CONSUMER_TOPICS: notify
             CONSUMER_GROUP: notifier-group

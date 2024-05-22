@@ -13,4 +13,4 @@ ENV PRODUCER_TOPIC='authorize'
 ENV ERROR_TOPIC='dlq'
 ENV PORT=8081
 
-CMD python3 /consumer-producer.py
+CMD python3 /cp.py
