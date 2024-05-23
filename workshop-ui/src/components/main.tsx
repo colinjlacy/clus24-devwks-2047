@@ -1,7 +1,7 @@
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import {IconButton, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
-import {NavLink, Outlet} from "react-router-dom";
+import {createBrowserRouter, Link, NavLink, Outlet, useLocation} from "react-router-dom";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Toolbar from "@mui/material/Toolbar";
@@ -53,6 +53,36 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }));
 
 export function Main() {
+    const location = useLocation();
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            element: <Main></Main>,
+            children: [
+                {
+                    index: true,
+                    element: <ReaderLayout mdPath={section1}></ReaderLayout>
+                },
+                {
+                    path: "section-2",
+                    element: <SectionLayout component={Section2({active: location.pathname.endsWith("section-2")})} mdPath={section2}></SectionLayout>
+                },
+                {
+                    path: "section-3",
+                    element: <SectionLayout component={Section3({active: location.pathname.endsWith("section-3")})} mdPath={section3}></SectionLayout>,
+                },
+                {
+                    path: "section-4",
+                    element: <SectionLayout component={Section4({active: location.pathname.endsWith("section-4")})} mdPath={section4}></SectionLayout>,
+                },
+                {
+                    path: "section-5",
+                    element: <SectionLayout component={Section5({active: location.pathname.endsWith("section-5")})} mdPath={section5}></SectionLayout>,
+                }
+            ]
+        },
+    ], {basename: "/"});
+
 
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState(0);
@@ -113,30 +143,31 @@ export function Main() {
                         aria-label="Vertical tabs example"
                         sx={{ borderRight: 1, borderColor: 'divider', fontSize: "18pt" }}
                     >
-                        <Tab label="Section 1" {...a11yProps(0)} />
-                        <Tab label="Section 2" {...a11yProps(1)} />
-                        <Tab label="Section 3" {...a11yProps(2)} />
-                        <Tab label="Section 4" {...a11yProps(3)} />
-                        <Tab label="Section 5" {...a11yProps(4)} />
+                        <Tab label="Section 1" value={"/"} to={"/"} component={Link} />
+                        <Tab label="Section 2" value={"/section-2"} to={"/section-2"} component={Link}  />
+                        <Tab label="Section 3" value={"/section-3"} to={"/section-3"} component={Link} />
+                        <Tab label="Section 4" value={"/section-4"} to={"/section-4"} component={Link} />
+                        <Tab label="Section 5" value={"/section-5"} to={"/section-5"} component={Link} />
                     </Tabs>                    {/*<List>*/}
                 </Box>
             </Drawer>
             <Box component="main" sx={{flexGrow: 1, paddingTop: "3rem"}}>
-                <CustomTabPanel value={value} index={0}>
-                    <ReaderLayout mdPath={section1}></ReaderLayout>
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={1}>
-                    <SectionLayout component={Section2({active: value === 1})} mdPath={section2}></SectionLayout>
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
-                    <SectionLayout component={Section3({active: value === 2})} mdPath={section3}></SectionLayout>
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={3}>
-                    <SectionLayout component={Section4({active: value === 3})} mdPath={section4}></SectionLayout>
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={4}>
-                    <SectionLayout component={Section5({active: value === 4})} mdPath={section5}></SectionLayout>
-                </CustomTabPanel>
+                <Outlet />
+                {/*<CustomTabPanel value={value} index={0}>*/}
+                {/*    <ReaderLayout mdPath={section1}></ReaderLayout>*/}
+                {/*</CustomTabPanel>*/}
+                {/*<CustomTabPanel value={value} index={1}>*/}
+                {/*    <SectionLayout component={Section2({active: value === 1})} mdPath={section2}></SectionLayout>*/}
+                {/*</CustomTabPanel>*/}
+                {/*<CustomTabPanel value={value} index={2}>*/}
+                {/*    <SectionLayout component={Section3({active: value === 2})} mdPath={section3}></SectionLayout>*/}
+                {/*</CustomTabPanel>*/}
+                {/*<CustomTabPanel value={value} index={3}>*/}
+                {/*    <SectionLayout component={Section4({active: value === 3})} mdPath={section4}></SectionLayout>*/}
+                {/*</CustomTabPanel>*/}
+                {/*<CustomTabPanel value={value} index={4}>*/}
+                {/*    <SectionLayout component={Section5({active: value === 4})} mdPath={section5}></SectionLayout>*/}
+                {/*</CustomTabPanel>*/}
             </Box>
         </Box>
     );
