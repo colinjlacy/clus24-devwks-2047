@@ -14,9 +14,9 @@ We'll also come back to `consumer.py`, and we'll configure it to listen on the t
 ```sh
 KAFKA_TOPIC="dlq" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
-KAFKA_GROUP="error-group" \
+CONSUMER_GROUP="error-group" \
 PORT=8084 \
-python consumer.py
+python3 consumer.py
 ```
 
 ## Dead-Letter Queue
@@ -71,6 +71,9 @@ In our implementation, we're using a single instance of a consumer, and aggregat
 </a>
 
 You may notice that this builds on system design that was shared in the **Additional Information** part of Section 2.
+
+> ### Discussion
+> Based on what we've seen here, and the diagram above, what do you think is a good use case for the fan-in pattern?
 
 ## Closing Up
 

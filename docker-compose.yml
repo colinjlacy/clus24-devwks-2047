@@ -65,10 +65,9 @@ services:
         expose:
             - "8081"
         depends_on:
-            kafka1:
-                condition: service_healthy
-            kafka2:
-                condition: service_healthy
+            - zookeeper
+            - kafka1
+            - kafka2
         environment:
             PORT: 8081
 
@@ -82,10 +81,9 @@ services:
         expose:
             - "8082"
         depends_on:
-            kafka1:
-                condition: service_healthy
-            kafka2:
-                condition: service_healthy
+            - zookeeper
+            - kafka1
+            - kafka2
         environment:
             CONSUMER_TOPICS: authorize
             CONSUMER_GROUP: authorizer-group
@@ -102,10 +100,9 @@ services:
         expose:
             - "8083"
         depends_on:
-            kafka1:
-                condition: service_healthy
-            kafka2:
-                condition: service_healthy
+            - zookeeper
+            - kafka1
+            - kafka2
         environment:
             CONSUMER_TOPICS: notify
             CONSUMER_GROUP: notifier-group

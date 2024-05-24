@@ -13,7 +13,6 @@ import Paper from '@mui/material/Paper';
 import {Button, Grid, List, ListItem, ListItemText} from "@mui/material";
 import {ProducerService} from "../services/producer.srvc";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {useMatch} from "react-router-dom";
 
 export default function Section3() {
     const [isProducerActive, setProducerActive] = useState(false);
@@ -24,7 +23,6 @@ export default function Section3() {
     const [secondConsumerList, setSecondConsumerList] = useState<any[]>([]);
     const [secondConsumerGroup, setSecondConsumerGroup] = useState<string>("");
     const [currentEventId, setCurrentEventId] = useState<number>(1);
-    const match = useMatch("/section-3")
 
     useEffect(() => {
         const producerInt = setInterval(() => {
@@ -97,7 +95,7 @@ export default function Section3() {
             setFirstConsumerGroup("")
             setSecondConsumerGroup("")
         }
-    }, [match]);
+    }, [isProducerActive, isFirstConsumerActive, isSecondConsumerActive]);
 
     async function sendEvent() {
         await ProducerService.postEvent({

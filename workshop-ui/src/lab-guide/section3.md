@@ -16,7 +16,7 @@ KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="first-group" \
 PORT=8001 \
-python consumer.py
+python3 consumer.py
 ```
 
 Once both Consumers are up and running, you should see them both display their group as `first-group` in blue text. If not, check the environment variables that you entered to ensure that they're identical to what's shown above.
@@ -57,7 +57,7 @@ KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="second-group" \
 PORT=8001 \
-python consumer.py
+python3 consumer.py
 ```
 
 Once the UI shows the Second Consumer is online, you'll see `second-group` displayed in orange.  Our system now looks slightly different:

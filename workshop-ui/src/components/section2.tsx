@@ -57,7 +57,7 @@ export default function Section2() {
             clearInterval(consumerInt);
             setConsumerList([])
         }
-    }, [match]);
+    }, [isProducerActive, isConsumerActive]);
 
     async function sendEvent() {
         await ProducerService.postEvent({

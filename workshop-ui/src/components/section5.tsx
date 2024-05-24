@@ -23,7 +23,6 @@ import {AccessTime, TaskAlt} from "@mui/icons-material";
 import {TabContext, TabList, TabPanel} from "@mui/lab";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
-import {useMatch} from "react-router-dom";
 
 const userEntries = Object.entries(ProducerService.fetchUsers())
 const topicToPropertyMap: { [key: string]: string } = {
@@ -43,7 +42,6 @@ export default function Section5() {
     const [nextUserIndex, setNextUserIndex] = useState<number>(0);
     const [sagaTraces, setSagaTraces] = useState<{ [key: string]: any }[]>([])
     const [selectedTab, setSelectedTab] = React.useState('1');
-    let match = useMatch("/section-4")
 
     useEffect(() => {
         const producerInt = setInterval(() => {
@@ -61,7 +59,7 @@ export default function Section5() {
             const responses = await Promise.allSettled([
                 axios.get(`${PROVISIONER_URL}`), axios.get(`${AUTHORIZER_URL}`), axios.get(`${NOTIFIER_URL}`)
             ]);
-            let traces = [...sagaTraces]
+            let traces:{ [key: string]: any }[] = [...sagaTraces]
             for (let i = 0; i < responses.length; i++) {
                 if (responses[i].status === "rejected") {
                     activeServiceTrackers[i](false)
@@ -75,12 +73,14 @@ export default function Section5() {
                     Object.keys(val.data).forEach((key: string) => {
                         const prop: string = topicToPropertyMap[key]
                         val.data[key].forEach((user: { [key: string]: any }) => {
+                            //@ts-ignore
                             traces = traces.map(trace => trace.id === user.id ? Object.assign({}, {[prop]: true}, trace) : trace)
                         })
                     })
                 }
             }
-            setSagaTraces(traces)
+            // @ts-ignore
+            setSagaTraces([...traces])
         }, POLLING_INTERVAL)
         const consumerInt = setInterval(() => {
             axios.get(`${DLQ_URL}/ping`).then(async res => {
@@ -105,10 +105,8 @@ export default function Section5() {
             clearInterval(producerInt);
             clearInterval(sagaInt);
             clearInterval(consumerInt)
-            clearTraces()
-            clearErrors()
         }
-    }, [match]);
+    }, [sagaTraces]);
 
     async function sendEvent() {
         await ProducerService.postEvent({

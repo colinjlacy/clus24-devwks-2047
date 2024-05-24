@@ -23,7 +23,6 @@ import {AUTHORIZER_URL, NOTIFIER_URL, POLLING_INTERVAL, PRODUCER_URL, PROVISIONE
 import {ProducerService} from "../services/producer.srvc";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import {CheckCircleOutline} from "@mui/icons-material";
-import {useMatch} from "react-router-dom";
 
 const userEntries = Object.entries(ProducerService.fetchUsers())
 const topicToPropertyMap: { [key: string]: string } = {
@@ -41,7 +40,6 @@ export default function Section4() {
     const [isNotifierActive, setNotifierActive] = useState(true);
     const [nextUserIndex, setNextUserIndex] = useState<number>(0);
     const [sagaTraces, setSagaTraces] = useState<{ [key: string]: any }[]>([])
-    let match = useMatch("/section-4")
 
     useEffect(() => {
         const producerInt = setInterval(() => {
@@ -82,11 +80,8 @@ export default function Section4() {
         return function () {
             clearInterval(producerInt);
             clearInterval(sagaInt);
-            setSagaTraces([])
-            setNextUserIndex(0)
-            setDebugMode(true)
         }
-    }, [match]);
+    }, [sagaTraces]);
 
     async function sendEvent() {
         await ProducerService.postEvent({
