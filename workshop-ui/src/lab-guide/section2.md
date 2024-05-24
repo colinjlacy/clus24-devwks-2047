@@ -8,6 +8,7 @@ The following set of commands creates and activates a fresh virtual environment,
 
 <span class="copy"></span>
 ```shell
+python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
 ```
