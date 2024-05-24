@@ -7,19 +7,18 @@ import Paper from '@mui/material/Paper';
 import {Button, List, ListItem, ListItemText} from "@mui/material";
 import {ProducerService} from "../services/producer.srvc";
 import DeleteIcon from '@mui/icons-material/Delete';
+import {useMatch} from "react-router-dom";
 
 
-export default function Section2(props: {active: boolean}) {
-    const [isProducerActive, setProducerActive] = useState(true);
-    const [isConsumerActive, setConsumerActive] = useState(true);
+export default function Section2() {
+    const [isProducerActive, setProducerActive] = useState(false);
+    const [isConsumerActive, setConsumerActive] = useState(false);
     const [consumerList, setConsumerList] = useState<any[]>([]);
     const [currentEventId, setCurrentEventId] = useState<number>(1);
+    let match = useMatch("/section-2")
+
     useEffect(() => {
         const producerInt = setInterval(() => {
-            if (!props.active) {
-                setConsumerList([])
-                return
-            }
             axios.get(`${PRODUCER_URL}/ping`).then(res => {
                 if (res.status === 200) {
                     setProducerActive(true)
@@ -27,11 +26,10 @@ export default function Section2(props: {active: boolean}) {
                 }
             }).catch(() => {
                 setProducerActive(false)
-                console.log("producer down")
+                console.log("section 2 producer down")
             });
         }, POLLING_INTERVAL)
         const consumerInt = setInterval(() => {
-            if (!props.active) return
             axios.get(`${FIRST_CONSUMER_URL}/ping`).then(async res => {
                 if (res.status === 200) {
                     setConsumerActive(true)
@@ -51,7 +49,7 @@ export default function Section2(props: {active: boolean}) {
                 }
             }).catch(() => {
                 setConsumerActive(false)
-                console.log("consumer down")
+                console.log("section 2 consumer down")
             });
         }, POLLING_INTERVAL)
         return function () {
@@ -59,7 +57,7 @@ export default function Section2(props: {active: boolean}) {
             clearInterval(consumerInt);
             setConsumerList([])
         }
-    }, [props.active]);
+    }, [match]);
 
     async function sendEvent() {
         await ProducerService.postEvent({
@@ -75,7 +73,7 @@ export default function Section2(props: {active: boolean}) {
 
     return (
         <>
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem"}}>
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem"}}>
 
                 <Typography variant="h4" gutterBottom>
                     Producer: {!isProducerActive && "Offline"}
@@ -93,7 +91,7 @@ export default function Section2(props: {active: boolean}) {
                     Send Event
                 </Button>
             </Paper>
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}} className={"consumer"}>
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}} className={"consumer"}>
 
                 <Typography variant="h4" gutterBottom>
                     Consumer: {!isConsumerActive && "Offline"}

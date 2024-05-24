@@ -8,13 +8,17 @@ Thanks for joining!  In this section we'll set up our lab environment in our loc
 
 In this lab, there are multiple sections that each focus on one or two aspects of event-driven architecture.  You'll typically find some interactive content on the left, and text/images/code snippets provided on the right.  Feel free to read as you go, or follow along.
 
+### Navigation
+
+Each of the five sections in this workshop has its own page.  You can use the buttons at the top or bottom of each section to progress through the workshop, or use the hamburger menu in the top left corner to jump to any section you like.
+
 ### Images
 
 All of the images in the provided text are viewable in a pop-out window, which will show those images at their full size.  Some of the images that you'll come across are no bigger than what is displayed in the guide, while others are much bigger, and are better when viewed in their expanded display.
 
 ### Copying Code Snippets
 
-here are code snippets that are shared as examples, and other snippets that are meant to be copied and used in your code or command line.  The ones that are intended to be copied come with a *copy* icon.  Clicking on that icon will copy the contents of the snippet to the clipboard for you, so you can just paste it wherever you need to. 
+There are code snippets that are shared as examples, and other snippets that are meant to be copied and used in your code or command line.  The ones that are intended to be copied come with a *copy* icon.  Clicking on that icon will copy the contents of the snippet to the clipboard for you, so you can just paste it wherever you need to. 
 
 Here's an example:
 
@@ -43,9 +47,7 @@ When you're ready, open a command line and navigate to the repo you just cloned,
 
 <span class="copy"></span>
 ```sh
-docker-compose \
-  -f docker-compose-kafka.yml \
-  up \
+docker-compose up \
   kafka-ui zookeeper kafka1 kafka2
 ```
 

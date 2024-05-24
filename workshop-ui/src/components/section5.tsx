@@ -1,34 +1,29 @@
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {
-    AlertTitle, Badge,
+    Alert,
+    AlertTitle,
     Button,
     List, ListItem, ListItemIcon, ListItemText,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {
-    AUTHORIZER_URL, DLQ_URL,
-    FIRST_CONSUMER_URL,
+    AUTHORIZER_URL,
+    DLQ_URL,
     NOTIFIER_URL,
     POLLING_INTERVAL,
     PRODUCER_URL,
     PROVISIONER_URL
 } from "../config/constants";
 import {ProducerService} from "../services/producer.srvc";
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import {AccessTime, CheckCircleOutline, TaskAlt} from "@mui/icons-material";
-import {Alert, TabContext, TabList, TabPanel} from "@mui/lab";
+import {AccessTime, TaskAlt} from "@mui/icons-material";
+import {TabContext, TabList, TabPanel} from "@mui/lab";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
+import {useMatch} from "react-router-dom";
 
 const userEntries = Object.entries(ProducerService.fetchUsers())
 const topicToPropertyMap: { [key: string]: string } = {
@@ -38,8 +33,8 @@ const topicToPropertyMap: { [key: string]: string } = {
     "notified": "complete"
 }
 
-export default function Section5(props: { active: boolean }) {
-    const [isProducerActive, setProducerActive] = useState(true);
+export default function Section5() {
+    const [isProducerActive, setProducerActive] = useState(false);
     const [isProvisionerActive, setProvisionerActive] = useState(true);
     const [isAuthorizerActive, setAuthorizerActive] = useState(true);
     const [isNotifierActive, setNotifierActive] = useState(true);
@@ -48,22 +43,20 @@ export default function Section5(props: { active: boolean }) {
     const [nextUserIndex, setNextUserIndex] = useState<number>(0);
     const [sagaTraces, setSagaTraces] = useState<{ [key: string]: any }[]>([])
     const [selectedTab, setSelectedTab] = React.useState('1');
+    let match = useMatch("/section-4")
 
     useEffect(() => {
-        if (!props.active) return
         const producerInt = setInterval(() => {
             axios.get(`${PRODUCER_URL}/ping`).then(res => {
                 if (res.status === 200) {
                     setProducerActive(true)
-                    console.log("section 3 producer running")
                 }
             }).catch(() => {
                 setProducerActive(false)
-                console.log("producer down")
+                console.log("section 5 producer down")
             });
         }, POLLING_INTERVAL)
         const sagaInt = setInterval(async () => {
-            if (!props.active) return
             const activeServiceTrackers = [setProvisionerActive, setAuthorizerActive, setNotifierActive]
             const responses = await Promise.allSettled([
                 axios.get(`${PROVISIONER_URL}`), axios.get(`${AUTHORIZER_URL}`), axios.get(`${NOTIFIER_URL}`)
@@ -90,7 +83,6 @@ export default function Section5(props: { active: boolean }) {
             setSagaTraces(traces)
         }, POLLING_INTERVAL)
         const consumerInt = setInterval(() => {
-            if (!props.active) return
             axios.get(`${DLQ_URL}/ping`).then(async res => {
                 if (res.status === 200) {
                     setConsumerActive(true)
@@ -106,15 +98,17 @@ export default function Section5(props: { active: boolean }) {
                 }
             }).catch(() => {
                 setConsumerActive(false)
-                console.log("consumer down")
+                console.log("Section 5 DLQ consumer down")
             });
         }, POLLING_INTERVAL)
         return function () {
             clearInterval(producerInt);
             clearInterval(sagaInt);
             clearInterval(consumerInt)
+            clearTraces()
+            clearErrors()
         }
-    }, [props.active, sagaTraces]);
+    }, [match]);
 
     async function sendEvent() {
         await ProducerService.postEvent({
@@ -150,7 +144,7 @@ export default function Section5(props: { active: boolean }) {
                 </Alert>
             }
 
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem"}}>
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem"}}>
                 <Typography variant="h4" gutterBottom>
                     Producer: {!isProducerActive && "Offline"}
                 </Typography>
@@ -170,7 +164,7 @@ export default function Section5(props: { active: boolean }) {
                 }
             </Paper>
 
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}}
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}}
                    className={"consumer"}>
 
                 <TabContext value={selectedTab}>
@@ -210,6 +204,12 @@ export default function Section5(props: { active: boolean }) {
 
                     </TabPanel>
                     <TabPanel value="2" style={{padding: "0"}}>
+                        {!isConsumerActive &&
+                            <Alert variant="filled" severity="warning" style={{margin: "1rem 0"}}>
+                                <AlertTitle>Warning</AlertTitle>
+                                The DLQ Consumer is not active. Please run the command listed to the right to activate the DLQ Consumer.
+                            </Alert>
+                        }
                         <List>
                             {
                                 errorList.length !== 0 && errorList.map((err: string, ind: number) => (

@@ -44,9 +44,7 @@ When we first got started with this lab, we ran the Docker containers needed to 
 
 <span class="copy"></span>
 ```shell
-docker compose \
-  -f docker-compose-kafka.yml \
-  up \
+docker compose up \
   provisioner authorizer notifier
 ```
 

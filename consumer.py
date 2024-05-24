@@ -129,7 +129,7 @@ async def list_messages():
 
 @app.get("/ping")
 async def ping():
-    return "pong:{}".format(KAFKA_GROUP)
+    return "pong:{}".format(CONSUMER_GROUP)
 
 
 # APPLICATION STARTUP

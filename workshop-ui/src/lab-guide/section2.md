@@ -1,5 +1,20 @@
 # Section 2: First Event Messages
 
+## Setup
+
+We'll need to make sure all of our dependencies are installed before we can run our `producer.py` and `consumer.py` files. 
+
+The following set of commands creates and activates a fresh virtual environment, and then installs dependencies listed in the `requirements.txt` file:
+
+<span class="copy"></span>
+```shell
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+Copy and paste these commands into your command line and then press enter. You'll see output logs showing each of the dependency packages being installed into your virtual environment. 
+
 ## Running the Producer
 
 If you look to the left, you'll notice there's an indicator showing that this lab guide is looking for a Producer and can't seem to find it, which indicates that it's not running.  Let's solve that problem right now.
@@ -33,7 +48,7 @@ python3 producer.py
 
 If your configuration was correct, the panel to the left should indicate that the Producer is online.  Nicely done!
 
-Click on the button to the left a few times to send some messages to the Kafka cluster. You can check in the [Kafka UI](http://localhost:8080/ui/clusters/local/all-topics/Topic1/messages?keySerde=String&valueSerde=String&limit=100) tab to see the message count on the `first-topic` topic increase each time you click the button.
+Click on the button to the left a few times to send some messages to the Kafka cluster. You can check in the <a href="http://localhost:8080/ui/clusters/local/all-topics/first-topic/messages?keySerde=String&valueSerde=String&limit=100" target="_blank">Kafka UI</a> tab to see the message count on the `first-topic` topic increase each time you click the button.
 
 ## Running the Consumer
 
@@ -55,7 +70,7 @@ When we run this file, we can pass in whatever values we want to ensure that thi
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="first-group" \
-python consumer.py
+python3 consumer.py
 ```
 
 Once that's connected, you should see a log printed to the console saying, *"Starting consumer on topic first-topic, in group first-group"*.
@@ -76,7 +91,7 @@ Now, restart the Consumer again with the following command (which you can probab
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="first-group" \
-python consumer.py
+python3 consumer.py
 ```
 
 **What do you notice?**  What benefit does this provide?
@@ -88,7 +103,7 @@ python consumer.py
 
 ## Moving on
 
-Leave the Producer and Consumer running, and click the button below to move on to the next section.
+Leave the Producer and Consumer running, and click the button at the top or bottom of the page to move on to the next section.
 
 <hr>
 

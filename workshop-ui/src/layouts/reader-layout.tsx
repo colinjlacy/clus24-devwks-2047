@@ -4,6 +4,9 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import GLightbox from "glightbox";
 import Box from "@mui/material/Box";
+import {Button, Grid} from "@mui/material";
+import {Link} from "react-router-dom";
+import {ChevronRight} from "@mui/icons-material";
 
 const md = new Remarkable('full', {
         html: true,
@@ -24,7 +27,7 @@ const md = new Remarkable('full', {
 );
 
 export default function ReaderLayout(props: { mdPath: string }) {
-
+    window.scrollTo(0, 0)
     const [markdown, setMarkdown] = useState("");
 
     useEffect(() => {
@@ -74,8 +77,28 @@ export default function ReaderLayout(props: { mdPath: string }) {
         <Box sx={{display: 'flex', justifyContent: "center"}}>
             <Box component="main" sx={{width: "57%", p: 3, backgroundColor: "#fff", color: "#333"}}
                  id={"markdown-renderer"}>
+                <Grid
+                    container
+                    direction="row"
+                    spacing={2}
+                    alignItems="stretch">
+                    <Grid item sm={6}>
+                    </Grid>
+                    <Grid item sm={6}>
+                        <Button component={Link} color={"primary"} to={`/section-2`}
+                                endIcon={<ChevronRight/>} size={"large"} sx={{float: "right"}}>
+                            Section 2
+                        </Button>
+                    </Grid>
+                </Grid>
+                <hr/>
                 <div dangerouslySetInnerHTML={{__html: markdown}}>
                 </div>
+                <hr/>
+                <Button component={Link} color={"primary"} to="/section-2" endIcon={<ChevronRight/>} size={"large"}
+                        sx={{float: "right"}}>
+                    Section 2{/*<ChevronRight fontSize={"inherit"}/>*/}
+                </Button>
             </Box>
         </Box>
     )

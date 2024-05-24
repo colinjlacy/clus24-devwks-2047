@@ -13,8 +13,9 @@ import Paper from '@mui/material/Paper';
 import {Button, Grid, List, ListItem, ListItemText} from "@mui/material";
 import {ProducerService} from "../services/producer.srvc";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useMatch} from "react-router-dom";
 
-export default function Section3(props: {active: boolean}) {
+export default function Section3() {
     const [isProducerActive, setProducerActive] = useState(false);
     const [isFirstConsumerActive, setFirstConsumerActive] = useState(false);
     const [firstConsumerList, setFirstConsumerList] = useState<any[]>([]);
@@ -23,8 +24,9 @@ export default function Section3(props: {active: boolean}) {
     const [secondConsumerList, setSecondConsumerList] = useState<any[]>([]);
     const [secondConsumerGroup, setSecondConsumerGroup] = useState<string>("");
     const [currentEventId, setCurrentEventId] = useState<number>(1);
+    const match = useMatch("/section-3")
+
     useEffect(() => {
-        if (!props.active) return
         const producerInt = setInterval(() => {
             axios.get(`${PRODUCER_URL}/ping`).then(res => {
                 if (res.status === 200) {
@@ -33,11 +35,10 @@ export default function Section3(props: {active: boolean}) {
                 }
             }).catch(() => {
                 setProducerActive(false)
-                console.log("producer down")
+                console.log("section 3 producer down")
             });
         }, POLLING_INTERVAL)
         const firstConsumerInt = setInterval(() => {
-            if (!props.active) return
             axios.get(`${FIRST_CONSUMER_URL}/ping`).then(async res => {
                 if (res.status === 200) {
                     setFirstConsumerActive(true)
@@ -59,11 +60,10 @@ export default function Section3(props: {active: boolean}) {
                 }
             }).catch(() => {
                 setFirstConsumerActive(false)
-                console.log("consumer down")
+                console.log("section 3 consumer 1 down")
             });
         }, POLLING_INTERVAL)
         const secondConsumerInt = setInterval(() => {
-            if (!props.active) return
             axios.get(`${SECOND_CONSUMER_URL}/ping`).then(async res => {
                 if (res.status === 200) {
                     setSecondConsumerActive(true)
@@ -85,15 +85,19 @@ export default function Section3(props: {active: boolean}) {
                 }
             }).catch(() => {
                 setSecondConsumerActive(false)
-                console.log("consumer down")
+                console.log("section 3 consumer 2 down")
             });
         }, POLLING_INTERVAL)
         return function () {
             clearInterval(producerInt);
             clearInterval(firstConsumerInt);
             clearInterval(secondConsumerInt);
+            setFirstConsumerList([])
+            setSecondConsumerList([])
+            setFirstConsumerGroup("")
+            setSecondConsumerGroup("")
         }
-    }, [props.active]);
+    }, [match]);
 
     async function sendEvent() {
         await ProducerService.postEvent({
@@ -115,7 +119,7 @@ export default function Section3(props: {active: boolean}) {
 
     return (
         <>
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem"}}>
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem"}}>
 
                 <Typography variant="h4" gutterBottom>
                     Producer: {!isProducerActive && "Offline"}
@@ -142,7 +146,7 @@ export default function Section3(props: {active: boolean}) {
                 alignItems="center">
 
                 <Grid item sm={6}>
-                    <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}} className={"consumer"}>
+                    <Paper variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}} className={"consumer"}>
 
                         <Typography variant="h4" gutterBottom>
                             First Consumer: {!isFirstConsumerActive && "Offline"}
@@ -179,7 +183,7 @@ export default function Section3(props: {active: boolean}) {
                 </Grid>
 
                 <Grid item sm={6}>
-                    <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}} className={"consumer"}>
+                    <Paper variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}} className={"consumer"}>
 
                         <Typography variant="h4" gutterBottom>
                             Second Consumer: {!isSecondConsumerActive && "Offline"}

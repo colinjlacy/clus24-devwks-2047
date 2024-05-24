@@ -16,16 +16,44 @@ import section5 from './lab-guide/section5.md'
 import ReaderLayout from "./layouts/reader-layout";
 import SectionLayout from "./layouts/section-layout";
 
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Main></Main>,
+        children: [
+            {
+                index: true,
+                element: <ReaderLayout mdPath={section1}></ReaderLayout>
+            },
+            {
+                path: "section-2",
+                element: <SectionLayout component={<Section2 />} mdPath={section2}></SectionLayout>
+            },
+            {
+                path: "section-3",
+                element: <SectionLayout component={<Section3 />} mdPath={section3}></SectionLayout>,
+            },
+            {
+                path: "section-4",
+                element: <SectionLayout component={<Section4 />} mdPath={section4}></SectionLayout>,
+            },
+            {
+                path: "section-5",
+                element: <SectionLayout component={<Section5 />} mdPath={section5}></SectionLayout>,
+            }
+        ]
+    },
+], {basename: "/"});
 
 function App() {
 
 
     return (
     <div className="App">
-      <header className="App-header">
-        <Main></Main>
-      </header>
-      {/*  <RouterProvider router={router}/>*/}
+      {/*<header className="App-header">*/}
+      {/*  <Main></Main>*/}
+      {/*</header>*/}
+        <RouterProvider router={router}/>
     </div>
   );
 }

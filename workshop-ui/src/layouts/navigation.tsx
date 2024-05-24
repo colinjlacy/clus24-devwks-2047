@@ -73,21 +73,21 @@ export default function BasicTabs() {
                 </Toolbar>
             </AppBar>
 
-            <CustomTabPanel value={value} index={0}>
-                <ReaderLayout mdPath={section1}></ReaderLayout>
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                <SectionLayout component={Section2({active: value === 1})} mdPath={section2}></SectionLayout>
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                <SectionLayout component={Section3({active: value === 2})} mdPath={section3}></SectionLayout>
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-                <SectionLayout component={Section4({active: value === 3})} mdPath={section4}></SectionLayout>
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={4}>
-                <SectionLayout component={Section5({active: value === 4})} mdPath={section5}></SectionLayout>
-            </CustomTabPanel>
+            {/*<CustomTabPanel value={value} index={0}>*/}
+            {/*    <ReaderLayout mdPath={section1}></ReaderLayout>*/}
+            {/*</CustomTabPanel>*/}
+            {/*<CustomTabPanel value={value} index={1}>*/}
+            {/*    <SectionLayout component={Section2({active: value === 1})} mdPath={section2}></SectionLayout>*/}
+            {/*</CustomTabPanel>*/}
+            {/*<CustomTabPanel value={value} index={2}>*/}
+            {/*    <SectionLayout component={Section3({active: value === 2})} mdPath={section3}></SectionLayout>*/}
+            {/*</CustomTabPanel>*/}
+            {/*<CustomTabPanel value={value} index={3}>*/}
+            {/*    <SectionLayout component={Section4({active: value === 3})} mdPath={section4}></SectionLayout>*/}
+            {/*</CustomTabPanel>*/}
+            {/*<CustomTabPanel value={value} index={4}>*/}
+            {/*    <SectionLayout component={Section5({active: value === 4})} mdPath={section5}></SectionLayout>*/}
+            {/*</CustomTabPanel>*/}
         </Box>
     );
 }

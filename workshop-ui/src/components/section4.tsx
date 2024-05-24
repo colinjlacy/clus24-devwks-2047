@@ -1,6 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {
+    Alert,
     AlertTitle,
     Button,
     FormControlLabel,
@@ -22,7 +23,7 @@ import {AUTHORIZER_URL, NOTIFIER_URL, POLLING_INTERVAL, PRODUCER_URL, PROVISIONE
 import {ProducerService} from "../services/producer.srvc";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import {CheckCircleOutline} from "@mui/icons-material";
-import {Alert} from "@mui/lab";
+import {useMatch} from "react-router-dom";
 
 const userEntries = Object.entries(ProducerService.fetchUsers())
 const topicToPropertyMap: { [key: string]: string } = {
@@ -32,30 +33,28 @@ const topicToPropertyMap: { [key: string]: string } = {
     "notified": "complete"
 }
 
-export default function Section4(props: { active: boolean }) {
-    const [isProducerActive, setProducerActive] = useState(true);
+export default function Section4() {
+    const [isProducerActive, setProducerActive] = useState(false);
     const [isDebugMode, setDebugMode] = useState(true);
     const [isProvisionerActive, setProvisionerActive] = useState(true);
     const [isAuthorizerActive, setAuthorizerActive] = useState(true);
     const [isNotifierActive, setNotifierActive] = useState(true);
     const [nextUserIndex, setNextUserIndex] = useState<number>(0);
     const [sagaTraces, setSagaTraces] = useState<{ [key: string]: any }[]>([])
+    let match = useMatch("/section-4")
 
     useEffect(() => {
-        if (!props.active) return
         const producerInt = setInterval(() => {
             axios.get(`${PRODUCER_URL}/ping`).then(res => {
                 if (res.status === 200) {
                     setProducerActive(true)
-                    console.log("section 4 producer running")
                 }
             }).catch(() => {
                 setProducerActive(false)
-                console.log("producer down")
+                console.log("section 4 producer down")
             });
         }, POLLING_INTERVAL)
         const sagaInt = setInterval(async () => {
-            if (!props.active) return
             const activeServiceTrackers = [setProvisionerActive, setAuthorizerActive, setNotifierActive]
             const responses = await Promise.allSettled([
                 axios.get(`${PROVISIONER_URL}`), axios.get(`${AUTHORIZER_URL}`), axios.get(`${NOTIFIER_URL}`)
@@ -83,8 +82,11 @@ export default function Section4(props: { active: boolean }) {
         return function () {
             clearInterval(producerInt);
             clearInterval(sagaInt);
+            setSagaTraces([])
+            setNextUserIndex(0)
+            setDebugMode(true)
         }
-    }, [props.active, sagaTraces]);
+    }, [match]);
 
     async function sendEvent() {
         await ProducerService.postEvent({
@@ -116,7 +118,7 @@ export default function Section4(props: { active: boolean }) {
                 </Alert>
             }
 
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem"}}>
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem"}}>
 
                 <Typography variant="h4" gutterBottom>
                     Producer: {!isProducerActive && "Offline"}
@@ -156,7 +158,7 @@ export default function Section4(props: { active: boolean }) {
 
 
             </Paper>
-            <Paper elevation={3} variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}}
+            <Paper variant={"outlined"} square={false} style={{padding: "1rem", marginTop: "2rem"}}
                    className={"consumer"}>
 
                 <TableContainer>
@@ -204,7 +206,7 @@ export default function Section4(props: { active: boolean }) {
                                 </TableRow>
                             ))}
                             {sagaTraces.length === 0 &&
-                                <>
+                                <TableRow>
                                     <TableCell component="th" scope="row">
                                         <em>No new users onboarded yet</em>
                                     </TableCell>
@@ -216,7 +218,7 @@ export default function Section4(props: { active: boolean }) {
                                         </>
                                     }
                                     <TableCell align="right"></TableCell>
-                                </>
+                                </TableRow>
                             }
                         </TableBody>
                     </Table>
