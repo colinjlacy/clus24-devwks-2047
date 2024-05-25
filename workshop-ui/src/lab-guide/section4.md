@@ -45,7 +45,7 @@ When we first got started with this lab, we ran the Docker containers needed to 
 <span class="copy"></span>
 ```shell
 docker compose up \
-  provisioner authorizer notifier
+  provisioner authorizer notifier --no-recreate
 ```
 
 This will stand up three services that we haven't yet discussed:

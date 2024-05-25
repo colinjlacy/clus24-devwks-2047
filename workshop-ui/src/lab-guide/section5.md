@@ -1,10 +1,22 @@
-# Section 5: Fan-In and the DLQ
+# Section 5: DLQ and the Fan-In Pattern
 
 In our last section, we'll look at two patterns:
 - The Dead-Letter Queue (aka the DLQ)
 - Fan-In (of which the DLQ is an implementation)
 
-## Setup:
+
+## Dead-Letter Queue
+
+In an event-driven system, there's generally no user or admin watching events flow through different services to keep track of their progress and success.  That means that if an error happens and stops the flow of events, no one is watching to triage and remediate the problem.
+
+That's where a **Dead-Letter Queue** (or DLQ for short) comes in, which is usually (at least) one dedicated *topic* that system designers will add to their message bus, allowing any number of services to send their error events so that they can be aggregated and tracked.
+
+Most event-driven systems will have more than one DLQ, but a minimum of one is usually the starting point for handling errors.
+
+> ### Discussion
+> How does this compare to error handling in a RESTful system?
+
+### Dead-Letter Queue in Action
 
 We'll use the same three services that we used in Section 4 to demo the Saga Pattern. However, in this section, they will raise errors in their workflow. This will happen automatically, in order to simulate real-life errors that can arise in your event-driven architecture.
 
@@ -12,25 +24,13 @@ We'll also come back to `consumer.py`, and we'll configure it to listen on the t
 
 <span class="copy"></span>
 ```sh
+source venv/bin/activate && 
 KAFKA_TOPIC="dlq" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="error-group" \
 PORT=8084 \
 python3 consumer.py
 ```
-
-## Dead-Letter Queue
-
-In an event-driven system, there's generally no user or admin watching events flow through different services to keep track of their progress and success.  That means that if an error happens and stops the flow of events, no one is watching to triage and remediate the problem.
-
-That's where a **Dead-Letter Queue** (or DLQ for short) comes in, which is usually (at least) one dedicated *topic* that system designers will add to their message bus, allowing any number of services to send their error events so that they can be aggregated and tracked. 
-
-Most event-driven systems will have more than one DLQ, but a minimum of one is usually the starting point for handling errors. 
-
-> ### Discussion
-> How does this compare to error handling in a RESTful system?
-
-### Dead-Letter Queue in Action
 
 The **Users** display is a simplified version of what we used in Section 4, simply meant to show users in either the *pending* or *complete* state.
 

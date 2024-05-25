@@ -1,5 +1,10 @@
 version: '3.8'
 
+# NOTE:
+# We're using very old versions of Kafka and Zookeeper in this example.
+# The reason is that these images allow us to create topics during the container startup.
+# Please use the latest versions in your production environment.
+
 services:
     kafka-ui:
         container_name: kafka-ui

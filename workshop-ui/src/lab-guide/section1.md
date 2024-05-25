@@ -24,17 +24,26 @@ Here's an example:
 
 <span class="copy"></span>
 ```sh
-echo "Cisco Live!"
+echo "Cisco Live"
 ```
 
-## Kafka and Friends
+### Our Environment
+
+All of the commands listed in this lab guide should be run at the root of a cloned copy of [this repo](https://github.com/colinjlacy/clus24).  While we'll do some very light work in Python, most of the work will be done in the command line and this UI. 
+
+We're going to run multiple processes from the command line in parallel.  We'll open several terminal windows at a time, so it *is highly recommended that you rename the terminal windows as you go*.
+
+## Exploring the Lab Repo
+
+### Kafka and Friends
+
 Let's start by looking at the `docker-compose.yaml` file.  It comes with seven services that we will use throughout this lab:
 - `zookeeper`: this is a management/orchestration service that configures our Kafka brokers to work together. Although it is necessary to run Kafka, we won't interact with this at all during this workshop.
 - `kafka1` and `kafka2`: these are our Apache Kafka brokers, to which our Producers and Consumers will connect to pass messages to each other.
 - `kafka-ui`: an extremely useful tool that allows us to visualize what's happening inside our Kafka cluster.
 - `provisioner`, `authorizer`, and `notifier`: three consumer/producers that we'll use to illustrate the saga pattern in Section 4.
 
-## The Python Files
+### The Python Files
 
 There are three Python files in this repo as well, which we'll start interacting with in the next section.
 - `producer.py` is a very small file (less than 60 lines!), and comes with a single REST endpoint, as well as a Kafka connection for *producing* event messages to a topic.  Once we configure this file, we'll use it for the duration of the lab.
@@ -48,7 +57,8 @@ When you're ready, open a command line and navigate to the repo you just cloned,
 <span class="copy"></span>
 ```sh
 docker-compose up \
-  kafka-ui zookeeper kafka1 kafka2
+  kafka-ui zookeeper kafka1 kafka2 \
+  --force-recreate
 ```
 
 Let's make sure everything is up and running by diving into the [Kafka UI](http://localhost:8080).
@@ -77,3 +87,23 @@ kafka1:
 ```
 
 If you were experimenting outside of this lab and wanted to create and configure more topics, you could delete the existing container, add more topics to this comma-separated list, and then recreate the container via the `docker-compose` command. **Note:** you have to delete the previous container in order for the new topics to be created.
+
+## Troubleshooting the Kafka Services
+
+If either of the Kafka brokers are not running, or if the topics are showing error statuses for their partitions, the best way to solve this problem is to stop the Kafka services using `Ctrl+C`. Then, run the following command to remove the existing containers:
+
+<span class="copy"></span>
+```shell
+docker rm kafka1 kafka2 zookeeper
+```
+
+This will remove the containers *and remove their temporary storage space on disk,* which is likely the cause of any services crashing due to stale data from a previous run.
+
+Now run the `up` command again:
+
+<span class="copy"></span>
+```sh
+docker-compose up \
+  kafka-ui zookeeper kafka1 kafka2 \
+  --force-recreate
+```

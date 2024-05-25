@@ -95,7 +95,7 @@ export default function Section3() {
             setFirstConsumerGroup("")
             setSecondConsumerGroup("")
         }
-    }, [isProducerActive, isFirstConsumerActive, isSecondConsumerActive]);
+    }, [isProducerActive]);
 
     async function sendEvent() {
         await ProducerService.postEvent({

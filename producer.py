@@ -14,7 +14,6 @@ producer = KafkaProducer(
 )
 
 
-
 @app.post('/')
 @cross_origin()
 def receive_event():  # put application's code here

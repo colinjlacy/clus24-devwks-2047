@@ -19,7 +19,7 @@ Copy and paste these commands into your command line and then press enter. You'l
 
 If you look to the left, you'll notice there's an indicator showing that this lab guide is looking for a Producer and can't seem to find it, which indicates that it's not running.  Let's solve that problem right now.
 
-The `producer.py` file requires some configuration before we can run it. Lines 13-16 show the configuration data points necessary for running the consumer; however those data points are empty.  If we were to run this code right now, we would get an error.
+The `producer.py` file requires some configuration before we can run it. Lines 11-14 show the configuration data points necessary for running the consumer; however those data points are empty.  If we were to run this code right now, we would get an error.
 
 Let's populate those configuration values so that we can set up a Producer connection to our Kafka cluster:
 
@@ -39,14 +39,19 @@ The first configuration, `bootstrap_servers`, tells our Python code where to loo
 
 The second configuration tells our code how to *serialize* the data it sends into a byte array - that is, how to convert it into a raw byte array.
 
+**Be sure to save with `Ctrl+S`.**
+
 With that configured, let's run the Producer by typing the following in a command line, in the local repo directory:
 
 <span class="copy"></span>
 ```shell
+source venv/bin/activate &&
 python3 producer.py
 ```
 
 If your configuration was correct, the panel to the left should indicate that the Producer is online.  Nicely done!
+
+In this section, we're working with the topic called `first-topic`, which is configured as the default topic in `producer.py`.
 
 Click on the button to the left a few times to send some messages to the Kafka cluster. You can check in the <a href="http://localhost:8080/ui/clusters/local/all-topics/first-topic/messages?keySerde=String&valueSerde=String&limit=100" target="_blank">Kafka UI</a> tab to see the message count on the `first-topic` topic increase each time you click the button.
 
@@ -67,6 +72,7 @@ When we run this file, we can pass in whatever values we want to ensure that thi
 
 <span class="copy"></span>
 ```sh
+source venv/bin/activate && 
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="first-group" \
@@ -88,6 +94,7 @@ Now, restart the Consumer again with the following command (which you can probab
 
 <span class="copy"></span>
 ```sh
+source venv/bin/activate && 
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="first-group" \

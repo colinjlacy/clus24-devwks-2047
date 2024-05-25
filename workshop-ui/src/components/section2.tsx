@@ -15,7 +15,6 @@ export default function Section2() {
     const [isConsumerActive, setConsumerActive] = useState(false);
     const [consumerList, setConsumerList] = useState<any[]>([]);
     const [currentEventId, setCurrentEventId] = useState<number>(1);
-    let match = useMatch("/section-2")
 
     useEffect(() => {
         const producerInt = setInterval(() => {
@@ -57,7 +56,7 @@ export default function Section2() {
             clearInterval(consumerInt);
             setConsumerList([])
         }
-    }, [isProducerActive, isConsumerActive]);
+    }, [isProducerActive]);
 
     async function sendEvent() {
         await ProducerService.postEvent({

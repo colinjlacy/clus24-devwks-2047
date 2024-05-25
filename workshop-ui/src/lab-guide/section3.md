@@ -12,6 +12,7 @@ Let's open a new command line window in the same directory as our Python files. 
 
 <span class="copy"></span>
 ```sh
+source venv/bin/activate && 
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="first-group" \
@@ -53,6 +54,7 @@ Let's start the Second Consumer again, but this time in a **different Consumer G
 
 <span class="copy"></span>
 ```sh
+source venv/bin/activate && 
 KAFKA_TOPIC="first-topic" \
 KAFKA_BOOTSTRAP_SERVERS="localhost:9093,localhost:9094" \
 CONSUMER_GROUP="second-group" \
