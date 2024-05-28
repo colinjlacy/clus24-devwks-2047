@@ -2,3 +2,4 @@ DS_Store
 .idea
 workshop-ui/node_modules/
 workshop-ui/.idea
+venv/

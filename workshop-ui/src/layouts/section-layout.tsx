@@ -53,7 +53,7 @@ export default function SectionLayout(props: { component: React.ReactElement, md
             .then((text) => {
                 setMarkdown(md.render(text))
             });
-    }, [location.pathname]);
+    }, [location.pathname, props.mdPath]);
 
     useEffect(() => {
         const pres = document.getElementsByTagName("pre")
