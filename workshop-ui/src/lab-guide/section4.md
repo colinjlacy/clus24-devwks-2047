@@ -33,8 +33,6 @@ In order to do that, it's likely going to have to consume multiple topics in par
 
 > ### Discussion
 > What are the risks of having a single consumer pull from multiple topics?
-> 
-> Are there coding considerations that you can think of when taking this approach? (Hint - blocking vs asynchronous)
 
 ## Our Pre-Packaged Consumers
 

@@ -35,6 +35,10 @@ We're going to run multiple processes from the command line in parallel.  We'll 
 
 ## Exploring the Lab Repo
 
+This workshop leverages the code found in [this repo](https://github.com/colinjlacy/clus24-devwks-2047). 
+
+If you are using the public deployment of this lab guide, be sure to clone the repo locally before continuing, as we're going to reference the files found within from here on out.  
+
 ### Kafka and Friends
 
 Let's start by looking at the `docker-compose.yaml` file.  It comes with seven services that we will use throughout this lab:
