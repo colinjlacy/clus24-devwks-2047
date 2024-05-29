@@ -25,4 +25,4 @@ From there, you can follow the instructions in the UI to complete the workshop.
                   
 ## Public URL
 
-There will be a **temporary** deployment of the lab guide available at  
+There will be a **temporary** deployment of the lab guide available at [https://i9emd683cm.us-west-2.awsapprunner.com/](https://i9emd683cm.us-west-2.awsapprunner.com/).  You will still need to pull this repo, as the deployment will **only** be for the lab guide.  The Python code and Docker environment are meant to be run locally.  
