@@ -6,6 +6,7 @@ We'll need to make sure all of our dependencies are installed before we can run 
 
 The following set of commands creates and activates a fresh virtual environment, and then installs dependencies listed in the `requirements.txt` file:
 
+#### Snippet 2.1
 <span class="copy"></span>
 ```shell
 python3 -m venv venv
@@ -23,6 +24,7 @@ The `producer.py` file requires some configuration before we can run it. Lines 1
 
 Let's populate those configuration values so that we can set up a Producer connection to our Kafka cluster:
 
+#### Snippet 2.2
 <span class="copy"></span>
 ```python
 producer = KafkaProducer(
@@ -43,13 +45,18 @@ The second configuration tells our code how to *serialize* the data it sends int
 
 With that configured, let's run the Producer by typing the following in a command line, in the local repo directory:
 
+#### Snippet 2.3
 <span class="copy"></span>
 ```shell
 source venv/bin/activate &&
 python3 producer.py
 ```
 
-If your configuration was correct, the panel to the left should indicate that the Producer is online.  Nicely done!
+If your configuration was correct, the panel to the left should indicate that the Producer is online.  Nicely done!  The system should currently look like this:
+
+<a href="images/s2.1.jpg" class="glightbox">
+    <img src="images/s2.1.jpg" alt="A producer pushing data to a message bus"/>
+</a>
 
 In this section, we're working with the topic called `first-topic`, which is configured as the default topic in `producer.py`.
 
@@ -60,6 +67,8 @@ Click on the button to the left a few times to send some messages to the Kafka c
 Configuring the consumer requires a little more input, and this time, instead of hard-coding our configuration values, we'll pass in environment variables to set up our Kafka connection.
 
 In the `consumer.py` file, you'll notice lines 18 - 22 have constants set by environment variables:
+
+#### Snippet 2.4
 ```py
 KAFKA_TOPIC = os.environ['KAFKA_TOPIC']
 KAFKA_BOOTSTRAP_SERVERS = (
@@ -70,6 +79,7 @@ CONSUMER_GROUP = os.environ["CONSUMER_GROUP"]
 
 When we run this file, we can pass in whatever values we want to ensure that this Consumer connects to the right Kafka cluster. To do that, we'll need to set those values when we run this file:
 
+#### Snippet 2.5
 <span class="copy"></span>
 ```sh
 source venv/bin/activate && 
@@ -79,7 +89,12 @@ CONSUMER_GROUP="first-group" \
 python3 consumer.py
 ```
 
-Once that's connected, you should see a log printed to the console saying, *"Starting consumer on topic first-topic, in group first-group"*.
+Once that's connected, you should see a log printed to the console saying, *"Starting consumer on topic first-topic, in group first-group"*. The system now looks like the following diagram:
+
+<a href="images/s2.2.jpg" class="glightbox">
+    <img src="images/s2.2.jpg" alt="A producer pushing data to a message bus, and a consumer receiving it"/>
+</a>
+
 
 Try clicking the **Send Event** button to the left a few times. Each time you do, the UI will send a POST request to the Producer, which will turn it into an Event that is sent to the `first-topic` topic in Kafka, and ultimately received by the Consumer. The UI, Producer, and Consumer will all each a time at which the event was handled.
 
@@ -92,6 +107,7 @@ Let's experiment with the Consumer a bit.  Try shutting down the Consumer using 
 
 Now, restart the Consumer again with the following command (which you can probably just press the up button to recall):
 
+#### Snippet 2.6
 <span class="copy"></span>
 ```sh
 source venv/bin/activate && 

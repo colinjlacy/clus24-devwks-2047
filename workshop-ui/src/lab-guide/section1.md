@@ -2,6 +2,10 @@
 
 Thanks for joining!  In this section we'll set up our lab environment in our local environment, and take a look at what has been provided for us.
 
+## Goals
+
+This lab is meant to introduce you to different design patterns in event-driven architecture. Each section implements a different pattern, building on previous sections. The goal is to demonstrate how event-driven systems behave in different scenarios.  
+
 ## Lab Guide and Conventions
 
 ### Layout
@@ -22,10 +26,15 @@ There are code snippets that are shared as examples, and other snippets that are
 
 Here's an example:
 
+#### Snippet 1.1
 <span class="copy"></span>
 ```sh
 echo "Cisco Live"
 ```
+
+### Troubleshooting and Additional Info
+
+At the bottom of each page you can find further information about the topics discussed within the section, as well as some troubleshooting pointers in case you run into problems with the code snippets in the lab guide. 
 
 ### Our Environment
 
@@ -58,6 +67,7 @@ There are three Python files in this repo as well, which we'll start interacting
 
 When you're ready, open a command line and navigate to the repo you just cloned, which houses this lab guide.  Then, run the following command to start the Kafka Cluster and its associated components:
 
+#### Snippet 1.2
 <span class="copy"></span>
 ```sh
 docker-compose up \
@@ -80,6 +90,8 @@ On the left, you'll see a navigation menu for this cluster.  If you click on **T
 </a>
 
 Those were configured in the `docker-compose.yml` file, in the section that defined the `kafka1` and `kafka2` containers:
+
+#### Snippet 1.3
 ```yaml
 kafka1:
     image: wurstmeister/kafka:2.13-2.8.1
@@ -96,6 +108,7 @@ If you were experimenting outside of this lab and wanted to create and configure
 
 If either of the Kafka brokers are not running, or if the topics are showing error statuses for their partitions, the best way to solve this problem is to stop the Kafka services using `Ctrl+C`. Then, run the following command to remove the existing containers:
 
+#### Snippet 1.4
 <span class="copy"></span>
 ```shell
 docker rm kafka1 kafka2 zookeeper
@@ -105,6 +118,7 @@ This will remove the containers *and remove their temporary storage space on dis
 
 Now run the `up` command again:
 
+#### Snippet 1.5
 <span class="copy"></span>
 ```sh
 docker-compose up \

@@ -40,6 +40,7 @@ Now that we've gotten hands-on with running our own consumers, it's time to expe
 
 When we first got started with this lab, we ran the Docker containers needed to power our Kafka cluster.  Now let's run some additional containers, which will help us illustrate the Saga pattern:
 
+#### Snippet 4.1
 <span class="copy"></span>
 ```shell
 docker compose up \

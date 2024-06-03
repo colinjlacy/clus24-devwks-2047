@@ -22,6 +22,7 @@ We'll use the same three services that we used in Section 4 to demo the Saga Pat
 
 We'll also come back to `consumer.py`, and we'll configure it to listen on the topic `dlq`. In a terminal window, run the following command:
 
+#### Snippet 5.1
 <span class="copy"></span>
 ```sh
 source venv/bin/activate && 

@@ -26,6 +26,18 @@ img {
   max-width: 100%;
 }
 
+#markdown-renderer h4 {
+  margin-bottom: 0;
+  font-size: 1rem;
+  color: #3b7fb9;
+  text-transform: uppercase;
+  letter-spacing: .15rem;
+}
+
+#markdown-renderer h4 + p {
+  margin: 0;
+}
+
 #markdown-renderer p code,
 #markdown-renderer li code {
   color: #ff9800;
@@ -33,6 +45,7 @@ img {
 }
 
 #markdown-renderer pre {
+  margin-top: 0;
   overflow-x: scroll;
 }
 

@@ -4,12 +4,17 @@ In this section we'll experiment with Consumer Groups to see how multiple consum
 
 You should see on the left that both the Producer and existing Consumer are running. Refer back to the previous section if you need to stand them up again.
 
+## What is a Consumer Group?
+
+Kafka keeps track of which consumers are subscribed to specific topics, ensuring that each consumer receives a message once and only once.  In most cloud-based systems, we generally want to ensure high availability, which often means running more than one instance of a microservice.  With that in mind, we can arrange consumers into **consumer Groups**. Kafka also keeps track of which consumer groups are subscribed to a topic, as well as which consumers are a part of which consumer group. Let's see how consumer groups behave with a little experimentation.  
+
 ## Multiple Consumers in the Same Group
 
 We're going to start another Consumer using the same `consumer.py` file. 
 
 Let's open a new command line window in the same directory as our Python files. We'll use the same Kafka configuration environment variables, but we'll also add a new one that specifies the port that we'll connect to in order to pull the consumed events:
 
+#### Snippet 3.1
 <span class="copy"></span>
 ```sh
 source venv/bin/activate && 
@@ -45,13 +50,12 @@ Now, shut down the Second Consumer using `Ctrl+C`, and click the **Send Event** 
 
 > ### Discussion
 > What do you think this means in terms of good practices for high availability?
-> 
-> What challenges does this create for data unification? (More on this below)
 
 ## Different Groups, the Fan-Out Pattern
 
 Let's start the Second Consumer again, but this time in a **different Consumer Group**:
 
+#### Snippet 3.2
 <span class="copy"></span>
 ```sh
 source venv/bin/activate && 
