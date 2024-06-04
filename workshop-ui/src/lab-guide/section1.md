@@ -71,8 +71,7 @@ When you're ready, open a command line and navigate to the repo you just cloned,
 <span class="copy"></span>
 ```sh
 docker-compose up \
-  kafka-ui zookeeper kafka1 kafka2 \
-  --force-recreate
+  kafka-ui zookeeper kafka1 kafka2
 ```
 
 Let's make sure everything is up and running by diving into the [Kafka UI](http://localhost:8080).
@@ -122,6 +121,5 @@ Now run the `up` command again:
 <span class="copy"></span>
 ```sh
 docker-compose up \
-  kafka-ui zookeeper kafka1 kafka2 \
-  --force-recreate
+  kafka-ui zookeeper kafka1 kafka2
 ```
