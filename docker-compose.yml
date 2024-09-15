@@ -20,7 +20,7 @@ services:
             KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 
     zookeeper:
-        image: wurstmeister/zookeeper:3.4.6
+        image: wurstmeister/zookeeper:latest
         container_name: zookeeper
         ports:
             - '2181:2181'
@@ -66,10 +66,61 @@ services:
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
 
+    producer:
+        image: ghcr.io/colinjlacy/eda-producer:latest
+        ports:
+            - "8000:8000"
+        expose:
+            - "8000"
+        container_name: producer
+        depends_on:
+            - zookeeper
+            - kafka1
+            - kafka2
+        environment:
+            KAFKA_BOOTSTRAP_SERVERS: 'kafka1:9092,kafka2:9092'
+            PORT: 8000
+            HOST: '0.0.0.0'
+
+    orange-consumer:
+        image: ghcr.io/colinjlacy/eda-consumer:latest
+        ports:
+            - "8001:8001"
+        expose:
+            - "8001"
+        container_name: orange-consumer
+        depends_on:
+            - zookeeper
+            - kafka1
+            - kafka2
+        environment:
+            KAFKA_BOOTSTRAP_SERVERS: 'kafka1:9092,kafka2:9092'
+            KAFKA_TOPIC: 'first-topic'
+            CONSUMER_GROUP: 'orange-group'
+            PORT: "8001"
+
+
+    primary-consumer:
+        image: ghcr.io/colinjlacy/eda-consumer:latest
+        ports:
+            - "8888:8888"
+        expose:
+            - "8888"
+        container_name: primary-consumer
+        depends_on:
+            - zookeeper
+            - kafka1
+            - kafka2
+        environment:
+            KAFKA_BOOTSTRAP_SERVERS: 'kafka1:9092,kafka2:9092'
+            KAFKA_TOPIC: 'first-topic'
+            CONSUMER_GROUP: 'blue-group'
+            PORT: "8888"
+
     provisioner:
         build:
             context: ./consumer-producer
-            dockerfile: ./Dockerfile
+            dockerfile: ./Dockerfile_cp
         container_name: provisioner
         ports:
             - "8081:8081"
@@ -85,7 +136,7 @@ services:
     authorizer:
         build:
             context: ./consumer-producer
-            dockerfile: ./Dockerfile
+            dockerfile: ./Dockerfile_cp_cp
         container_name: authorizer
         ports:
             - "8082:8082"
@@ -104,7 +155,7 @@ services:
     notifier:
         build:
             context: ./consumer-producer
-            dockerfile: ./Dockerfile
+            dockerfile: ./Dockerfile_cp
         container_name: notifier
         ports:
             - "8083:8083"
