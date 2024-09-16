@@ -82,6 +82,40 @@ services:
             PORT: 8000
             HOST: '0.0.0.0'
 
+    primary-consumer:
+        image: ghcr.io/colinjlacy/eda-consumer:latest
+        ports:
+            - "8888:8888"
+        expose:
+            - "8888"
+        container_name: primary-consumer
+        depends_on:
+            - zookeeper
+            - kafka1
+            - kafka2
+        environment:
+            KAFKA_BOOTSTRAP_SERVERS: 'kafka1:9092,kafka2:9092'
+            KAFKA_TOPIC: 'first-topic'
+            CONSUMER_GROUP: 'blue-group'
+            PORT: "8888"
+
+    blue-consumer:
+        image: ghcr.io/colinjlacy/eda-consumer:latest
+        ports:
+            - "8001:8001"
+        expose:
+            - "8001"
+        container_name: primary-consumer
+        depends_on:
+            - zookeeper
+            - kafka1
+            - kafka2
+        environment:
+            KAFKA_BOOTSTRAP_SERVERS: 'kafka1:9092,kafka2:9092'
+            KAFKA_TOPIC: 'first-topic'
+            CONSUMER_GROUP: 'blue-group'
+            PORT: "8001"
+
     orange-consumer:
         image: ghcr.io/colinjlacy/eda-consumer:latest
         ports:
@@ -99,23 +133,22 @@ services:
             CONSUMER_GROUP: 'orange-group'
             PORT: "8001"
 
-
-    primary-consumer:
+    error-consumer:
         image: ghcr.io/colinjlacy/eda-consumer:latest
         ports:
-            - "8888:8888"
+            - "8084:8084"
         expose:
-            - "8888"
-        container_name: primary-consumer
+            - "8084"
+        container_name: error-consumer
         depends_on:
             - zookeeper
             - kafka1
             - kafka2
         environment:
             KAFKA_BOOTSTRAP_SERVERS: 'kafka1:9092,kafka2:9092'
-            KAFKA_TOPIC: 'first-topic'
-            CONSUMER_GROUP: 'blue-group'
-            PORT: "8888"
+            KAFKA_TOPIC: 'error-topic'
+            CONSUMER_GROUP: 'error-group'
+            PORT: "8084"
 
     provisioner:
         build:
